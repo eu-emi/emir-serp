@@ -1,4 +1,4 @@
 emir-serp
 =========
 
-EMI Registry - Service Record Publisher
+EMI Registry - Service Endpoint Record Publisher

@@ -1,7 +1,7 @@
 #
-# Spec file for the EMIR-SERP - EMI Registry - Service Record Publisher
+# Spec file for the EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 #
-Summary: EMIR-SERP - EMI Registry - Service Record Publisher
+Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name: emir-serp
 Version: 1.0.1
 Release: 1%{?dist}
@@ -24,7 +24,7 @@ and periodical registration and update against the configured EMI
 Registry service instead of the services or other manual administration
 tools.
 
-This package contains the EMI Registry - Service Record Publisher.
+This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 
 %changelog
