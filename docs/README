@@ -1,8 +1,8 @@
 EMI Registry - Service Endpoint Record Publisher (EMIR-SERP)
---------------------------
+------------------------------------------------------------
 
 About the EMIR-SERP
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 The UMD services need to be registered into the EMI Registry service
 infrastructure to be discoverable for the clients. Most of the services
