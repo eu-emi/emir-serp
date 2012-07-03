@@ -1,16 +1,16 @@
-EMIR Client Daemon (EMIRD)
+EMI Registry - Service Record Publisher (EMIR-SERP)
 --------------------------
 
-About the EMIRD
+About the EMIR-SERP
 ~~~~~~~~~~~~~~~
 
 The UMD services need to be registered into the EMI Registry service
 infrastructure to be discoverable for the clients. Most of the services
 or even the containers executing them provide a way to do this but not
 all of them. For those that are unable to register themselves
-automatically and periodically the EMIRD is available.
+automatically and periodically the EMIR-SERP is available.
 
-The EMIRD is a daemon like service that can be executed next to these
+The EMIR-SERP is a daemon like service that can be executed next to these
 services (preferably on the same machine) and able to perform the
 automatical and periodical registration and update against the
 configured EMI Registry service instead of the service itself. This
@@ -18,10 +18,10 @@ client uses exactly the same, standard RESTful API as the other clients
 do.
 
 Most of the parameters of these registrations and updates can be
-configured. For the details see the <<anchor-emird-config,Configuration section>>!
+configured. For the details see the <<anchor-emir-serp-config,Configuration section>>!
 
 After the successful registration until the termination of the daemon,
-the EMIRD client do the periodical updates then finally, when the execution of
+the EMIR-SERP client do the periodical updates then finally, when the execution of
 the daemon is over, it attempts to delete the service entries from the
 remote database.
 
@@ -36,25 +36,25 @@ The advanced entries can contains any kind of key value pairs that are
 accepted by the EMI Regisrty services and can be configured in the form
 of whole, formatted *json* documents.
 
-anchor:anchor-emird-installation
+anchor:anchor-emir-serp-installation
 Installation
 ~~~~~~~~~~~~
 
-The installation of the EMIRD client is trivial. The only thing to do is
-to install the +emir-daemon+ package from the EMI repository by
+The installation of the EMIR-SERP client is trivial. The only thing to do is
+to install the +emir-serp+ package from the EMI repository by
 executing:
 
-`yum instlal emir-daemon`
+`yum install emir-serp`
 
-anchor:anchor-emird-config
+anchor:anchor-emir-serp-config
 Configuration
 ~~~~~~~~~~~~~
 
-The configuration of EMIRD can be performed by editing its configuration
+The configuration of EMIR-SERP can be performed by editing its configuration
 file or files. The configuration can be found basically in one file
-that default location is +/etc/emi/emird/emird.ini+.
+that default location is +/etc/emi/emir-serp/emir-serp.ini+.
 
-This file contains every configuration options that can be the EMIRD daemon
+This file contains every configuration options that can be the EMIR-SERP daemon
 control by, like _service url_, _logging verbosity_, _credential
 location_, etc.
 
@@ -151,7 +151,7 @@ Description:
 
 Logging verbosity. The parameter is optional. If missing or an invalid
 value is given, the default value will be used. The logs are written
-into the log file that can be found in the _/var/log/emi/emird_
+into the log file that can be found in the _/var/log/emi/emir-serp_
 directory by default.
 
 Service_Endpoint_URL
@@ -204,7 +204,7 @@ Description:
 The service entry can be also defined in a single external json formatted
 file per service. Any allowed json attributes are allowed in this way.
 The location of this file must be defined in this ini variable. The
-recommended place for these files is under the +/etc/emi/emird/+
+recommended place for these files is under the +/etc/emi/emir-serp/+
 directory and naming them after the name of the given service with
 +.json+ extension.
 
@@ -225,7 +225,7 @@ Description:
 The service entry can be also defined in multiple external json formatted
 files per service. Any allowed json attributes are allowed in these files.
 The files must be put under a directory defined in this ini variable. The
-recommended place for these directories is under the +/etc/emi/emird/+
+recommended place for these directories is under the +/etc/emi/emir-serp/+
 directory. The directory is rescanned in every period and the file that
 can be found (directly) on this location will reparsed, so the changes
 made or new file created will appear in the next registration.

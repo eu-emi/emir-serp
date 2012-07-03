@@ -58,7 +58,7 @@ class Daemon(object):
 				# Exit first parent
 				sys.exit(0) 
 		except OSError, e: 
-			logging.getLogger('emird').error("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+			logging.getLogger('emir-serp').error("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1)
 		
 		# Decouple from parent environment
@@ -73,7 +73,7 @@ class Daemon(object):
 				# Exit from second parent
 				sys.exit(0) 
 		except OSError, e: 
-			logging.getLogger('emird').error("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
+			logging.getLogger('emir-serp').error("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1) 
 	
 		if sys.platform != 'darwin': # This block breaks on OS X
@@ -95,7 +95,7 @@ class Daemon(object):
 		signal.signal(signal.SIGTERM, sigtermhandler)
 		signal.signal(signal.SIGINT, sigtermhandler)
 
-                logging.getLogger('emird').debug('Daemon started')
+                logging.getLogger('emir-serp').debug('Daemon started')
 		
 		# Write pidfile
 		atexit.register(self.delpid) # Make sure pid file is removed if we quit
@@ -110,7 +110,7 @@ class Daemon(object):
 		Start the daemon
 		"""
 		
-                logging.getLogger('emird').debug('Daemon starting...')
+                logging.getLogger('emir-serp').debug('Daemon starting...')
 		
 		# Check for a pidfile to see if the daemon already runs
 		try:
@@ -124,7 +124,7 @@ class Daemon(object):
 	
 		if pid:
 			message = "pidfile %s already exists. Is it already running?\n"
-			logging.getLogger('emird').error(message % self.pidfile)
+			logging.getLogger('emir-serp').error(message % self.pidfile)
 			sys.exit(1)
 
 		# Start the daemon
@@ -136,7 +136,7 @@ class Daemon(object):
 		Stop the daemon
 		"""
 		
-		logging.getLogger('emird').debug('Daemon stopping...')
+		logging.getLogger('emir-serp').debug('Daemon stopping...')
 		
 		# Get the pid from the pidfile
 		try:
@@ -150,7 +150,7 @@ class Daemon(object):
 	
 		if not pid:
 			message = "pidfile %s does not exist. Not running?\n"
-			logging.getLogger('emird').error(message % self.pidfile)
+			logging.getLogger('emir-serp').error(message % self.pidfile)
 			
 			# Just to be sure. A ValueError might occur if the PID file is empty but does actually exist
 			if os.path.exists(self.pidfile):
@@ -161,7 +161,7 @@ class Daemon(object):
 		if os.path.exists(self.pidfile):
 			os.remove(self.pidfile)
 		
-		logging.getLogger('emird').debug('Daemon stopped')
+		logging.getLogger('emir-serp').debug('Daemon stopped')
 
 	def restart(self):
 		"""

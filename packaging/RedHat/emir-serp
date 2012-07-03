@@ -1,24 +1,24 @@
 #!/bin/bash
 #
-# EMIRD
+# EMIR-SERP
 #
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-NAME="EMIRD"
+NAME="EMIR-SERP"
 
 #This must be equal to this file name
-SERVICE=emird
-DAEMON=/usr/sbin/emird
-EMIRD_USER=emi
-LASTPID=/var/run/emi/emird/emird.pid
+SERVICE=emir-serp
+DAEMON=/usr/bin/emir-serp
+EMIR_SERP_USER=emi
+LASTPID=/var/run/emi/emir-serp/emir-serp.pid
 
 function start {
   if [ -f $LASTPID ]; then
     status -p "$LASTPID" "$SERVICE"
     RETVAL=$?
   else
-    runuser -s /bin/bash -c "$DAEMON" "$EMIRD_USER"
+    runuser -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIR_SERP_USER"
     RETVAL=$?
     echo -n "$NAME startup"
     [ "$RETVAL" -eq 0 ] && success || failure 

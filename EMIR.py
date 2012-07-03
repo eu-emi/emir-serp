@@ -30,16 +30,16 @@ class EMIRConfiguration:
       'cadir': (False, '/etc/grid-security/certificates', ''),
     }
     # Parse common configuration options and fill default values if necessary
-    if not self.parser.has_section('emir'):
+    if not self.parser.has_section('emir-serp'):
       raise Exception("Section 'emir' is missing from the configuration file")
     for attr in [x for x in attributes.keys() if attributes[x][0]]:
-      if not attr in self.parser.options('emir'):
-        raise Exception("The '%s' item cannot be found in '%s' section" % (attr, 'emir'))
-      setattr(self,attr,self.parser.get('emir',attr))
+      if not attr in self.parser.options('emir-serp'):
+        raise Exception("The '%s' item cannot be found in '%s' section" % (attr, 'emir-serp'))
+      setattr(self,attr,self.parser.get('emir-serp',attr))
 
     for attr in [x for x in attributes.keys() if not attributes[x][0]]:
-      if attr in self.parser.options('emir'):
-        setattr(self,attr,self.parser.get('emir',attr))
+      if attr in self.parser.options('emir-serp'):
+        setattr(self,attr,self.parser.get('emir-serp',attr))
       else:
         setattr(self,attr,attributes[attr][1])
 
@@ -78,7 +78,7 @@ class EMIRConfiguration:
     }
 
     if not self.verbosity in verbosity_map.keys():
-      logging.getLogger('emird').error("Configuration error. '%s' is an invalid value for verbosity configuration option '%s' used instead" % (self.verbosity, default_verbosity))
+      logging.getLogger('emir-serp').error("Configuration error. '%s' is an invalid value for verbosity configuration option '%s' used instead" % (self.verbosity, default_verbosity))
       self.verbosity = default_verbosity
 
     self.loglevel = verbosity_map[self.verbosity]
@@ -213,15 +213,15 @@ class EMIRClient:
           }
           # -- End of hack ;-)
           if 'Service_Endpoint_ID' in item and 'Service_Endpoint_URL' in item:
-            logging.getLogger('emird').debug('REGISTRATION: Endpoint ID: %s; URL: %s' % (item['Service_Endpoint_ID'], item['Service_Endpoint_URL']))
+            logging.getLogger('emir-serp').debug('REGISTRATION: Endpoint ID: %s; URL: %s' % (item['Service_Endpoint_ID'], item['Service_Endpoint_URL']))
           elif 'Service_Endpoint_ID' in item:
-            logging.getLogger('emird').debug('REGISTRATION: Endpoint ID: %s' % item['Service_Endpoint_ID'])
+            logging.getLogger('emir-serp').debug('REGISTRATION: Endpoint ID: %s' % item['Service_Endpoint_ID'])
           elif 'Service_Endpoint_URL' in item:
-            logging.getLogger('emird').debug('REGISTRATION: Endpoint URL: %s' % item['Service_Endpoint_URL'])
+            logging.getLogger('emir-serp').debug('REGISTRATION: Endpoint URL: %s' % item['Service_Endpoint_URL'])
 
           service_entries.append(item)
       except Exception, ex:
-        logging.getLogger('emird').error('Message composing error: %s' % ex)
+        logging.getLogger('emir-serp').error('Message composing error: %s' % ex)
     return service_entries
 
   def update(self):
