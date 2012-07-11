@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
+### BEGIN INIT INFO
+# Provides:          emir-serp
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
+# Description:       EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
+### END INIT INFO
+
+
+# Source function library.
+. /lib/lsb/init-functions
+
+NAME="EMIRD"
+
+#This must be equal to this file name
+SERVICE=emird
+EMIRD_USER=emi
+DAEMON=/usr/bin/emird
+LASTPID=/var/run/emi/emird/emird.pid
+
+start() {
+        log_daemon_msg "Starting $NAME"
+	su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIRD_USER"
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && touch "/var/lock/$SERVICE"
+        log_end_msg $RETVAL
+        echo
+        return $RETVAL
+
+}
+stop() {
+        log_daemon_msg "Stopping $NAME"
+        echo
+	kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
+        log_end_msg $?
+        rm -f "/var/lock/$SERVICE"
+}
+
+status(){
+         if [ -a "$LASTPID" ]; then
+                 status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
+         else
+                 log_failure_msg "$SERVICE is not running"
+         fi
+}
+
+
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	status 
+	;;
+  restart)
+	stop
+	start
+	;;
+   force-reload)
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|restart|force-reload|help}"
+	exit 1
+esac
+
+exit $RETVAL
