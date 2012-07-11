@@ -8,11 +8,7 @@ default:
 
 deb:
 	rm -rf .git .gitignore
-	cp -a $(DEBENV)/debian .
+	[ -d $(DEBENV)/debian ] && mv -a $(DEBENV)/debian .
 	tar -cvzf ../emir-serp_$(VERSION).orig.tar.gz \
 		$(EXCLUDES) $(FILES)
 	debuild -us -uc
-
-clean:
-	rm -rf debian
-
