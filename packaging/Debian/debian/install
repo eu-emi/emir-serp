@@ -1,0 +1,3 @@
+daemon.py EMIR.py	/usr/lib/emi/emir-serp/
+emir-serp.ini		/etc/emi/emir-serp/
+emir-serp		/usr/bin/
