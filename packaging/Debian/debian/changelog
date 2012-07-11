@@ -1,3 +1,9 @@
+emir-serp (1.0.0-2) stable; urgency=low
+
+  * Fixing Debian specific init script
+
+ -- Ivan Marton <martoni@niif.hu>  Wed, 11 Jul 2012 15:57:22 +0200
+
 emir-serp (1.0.0-1) stable; urgency=low
 
   * Initial release
