@@ -15,7 +15,7 @@ path.insert(0, '/usr/lib64/emi/emir-serp')
 from daemon import Daemon
 from EMIR import EMIRConfiguration, EMIRClient
 
-class emir-serp(Daemon):
+class EmirSerp(Daemon):
   def __init__(self, pid_file, config_file, log_file):
 
     # Initialize EMIR related components
@@ -47,7 +47,7 @@ class emir-serp(Daemon):
       exit(1)
 
     # Call parent's constructor to daemonize the process
-    super(emir-serp,self).__init__(pid_file, devnull, devnull, devnull, '/tmp')
+    super(EmirSerp,self).__init__(pid_file, devnull, devnull, devnull, '/tmp')
 
   def run(self):
     # Try to send registration message. If do not manage to fall back
@@ -111,7 +111,7 @@ if __name__ == "__main__":
   (options, args) = parser.parse_args()
 
   # Creating and starting the daemon class and process
-  myDaemon = emir-serp(options.pid_file, options.config_file, options.log_file)
+  myDaemon = EmirSerp(options.pid_file, options.config_file, options.log_file)
 
   if options.foreground:
     myDaemon.run()
