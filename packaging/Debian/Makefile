@@ -5,7 +5,7 @@ FILES = EMIR.py daemon.py  docs  emir-serp  emir-serp.ini
 
 deb:
 	cp -a $(DEBENV)/debian .
-	tar -cvzf ../emir-serp_$(VERSION).tar.gz \
+	tar -cvzf ../emir-serp_$(VERSION).orig.tar.gz \
 		$(EXCLUDES) $(FILES)
 	debuild -us -uc
 
