@@ -48,7 +48,7 @@ binary-indep: install
 	dh_builddeb
 
 # Build architecture-dependent files here.
-#binary-arch: install
+binary-arch: install
 
 binary: binary-indep
 .PHONY: clean binary-indep binary install
