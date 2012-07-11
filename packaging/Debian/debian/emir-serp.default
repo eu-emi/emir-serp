@@ -1,4 +1,4 @@
 # Set variable to 'yes' to enable service
 # Prior configure the service in the configuration
 # file '/etc/emi/emir-serp/emir-serp.ini'.
-ENABLED=no
+ENABLED=no-unconfigured

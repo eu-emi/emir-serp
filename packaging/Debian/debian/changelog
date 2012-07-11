@@ -1,3 +1,9 @@
+emir-serp (1.0.0-4) stable; urgency=low
+
+  * Fixing init script
+
+ -- Ivan Marton <martoni@niif.hu>  Wed, 11 Jul 2012 16:31:29 +0200
+
 emir-serp (1.0.0-3) stable; urgency=low
 
   * Introducing /etc/default/emir-serp to disable service by default

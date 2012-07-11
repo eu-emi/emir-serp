@@ -13,7 +13,15 @@
 
 [ -f /etc/default/emir-serp ] && . /etc/default/emir-serp
 
-[ "$ENABLED" = "yes" ] || exit
+if [ "$ENABLED" != "yes" ] 
+then
+  if [ "$ENABLED" = "no-unconfigured" ] 
+  then
+    echo "The service is still unconfigured."
+    echo "Please edit /etc/default/emir-serp after the configuration."
+  fi
+  exit 0
+fi
 
 # Source function library.
 . /lib/lsb/init-functions
