@@ -15,17 +15,17 @@
 # Source function library.
 . /lib/lsb/init-functions
 
-NAME="EMIRD"
+NAME="EMIR-SERP"
 
 #This must be equal to this file name
-SERVICE=emird
-EMIRD_USER=emi
-DAEMON=/usr/bin/emird
-LASTPID=/var/run/emi/emird/emird.pid
+SERVICE=emir-serp
+EMIR_SERP_USER=emi
+DAEMON=/usr/bin/emir-serp
+LASTPID=/var/run/emi/emir-serp/emir-serp.pid
 
 start() {
         log_daemon_msg "Starting $NAME"
-	su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIRD_USER"
+	su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIR_SERP_USER"
         RETVAL=$?
         [ $RETVAL -eq 0 ] && touch "/var/lock/$SERVICE"
         log_end_msg $RETVAL
