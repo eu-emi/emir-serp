@@ -42,7 +42,7 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 %prep
 rm -rf %{name}-%{version}
-git clone git://github.com/eu-emi/emiregistry.git %{buildroot}/emiregistry/
+git clone git://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/
 install -d %{buildroot}%{_bindir}
@@ -50,14 +50,14 @@ install -d %{buildroot}%{_localstatedir}/run/emi/emir-serp/
 install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emir-serp
 install -d %{buildroot}/etc/init.d
-install -m 0644 %{buildroot}/emiregistry/emir-serp/daemon.py %{buildroot}%{_libdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emiregistry/emir-serp/EMIR.py %{buildroot}%{_libdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emiregistry/emir-serp/emir-serp.ini %{buildroot}%{_sysconfdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emiregistry/emir-serp/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0644 %{buildroot}/emiregistry/emir-serp/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 %{buildroot}/emiregistry/emir-serp/emir-serp %{buildroot}%{_bindir}/
-install -m 0755 %{buildroot}/emiregistry/emir-serp/packaging/RedHat/emir-serp %{buildroot}/etc/init.d/
-rm -rf %{buildroot}/emiregistry
+install -m 0644 %{buildroot}/emir-serp/daemon.py %{buildroot}%{_libdir}/emi/emir-serp/
+install -m 0644 %{buildroot}/emir-serp/EMIR.py %{buildroot}%{_libdir}/emi/emir-serp/
+install -m 0644 %{buildroot}/emir-serp/emir-serp.ini %{buildroot}%{_sysconfdir}/emi/emir-serp/
+install -m 0644 %{buildroot}/emir-serp/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
+install -m 0644 %{buildroot}/emir-serp/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
+install -m 0755 %{buildroot}/emir-serp/emir-serp %{buildroot}%{_bindir}/
+install -m 0755 %{buildroot}/emir-serp/packaging/RedHat/emir-serp %{buildroot}/etc/init.d/
+rm -rf %{buildroot}/emir-serp
 
 
 %files
