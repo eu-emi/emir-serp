@@ -201,7 +201,7 @@ class EMIRClient:
         #   '$date': datetime.datetime.utcnow().isoformat()+'Z'
         # }
         # service_entry['Service_ExpireOn']={
-        #   '$date': (datetime.datetime.utcnow()+datetime.timedelta(minutes=self.config.validity)).isoformat()+'Z'
+        #   '$date': (datetime.datetime.utcnow()+datetime.timedelta(hours=self.config.validity)).isoformat()+'Z'
         # }
         # Doing these:
         for item in service_entry:
@@ -209,7 +209,7 @@ class EMIRClient:
             '$date': datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
           }
           item['Service_ExpireOn'] = {
-            '$date': (datetime.datetime.utcnow()+datetime.timedelta(minutes=self.config.validity)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            '$date': (datetime.datetime.utcnow()+datetime.timedelta(hours=self.config.validity)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
           }
           # -- End of hack ;-)
           if 'Service_Endpoint_ID' in item and 'Service_Endpoint_URL' in item:

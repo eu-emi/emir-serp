@@ -100,7 +100,7 @@ Mandatory: Yes
 Description:
 
 The period of the registration/update messages. Its value is given in
-minutes.
+hours.
 
 validity
 ++++++++
@@ -109,7 +109,7 @@ Default value: _No default value_
 Mandatory: Yes
 Description:
 
-The validity of the registration entries. Its value is given in minutes.
+The validity of the registration entries. Its value is given in hours.
 
 cert
 ++++

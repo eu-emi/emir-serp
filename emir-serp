@@ -65,9 +65,9 @@ class EmirSerp(Daemon):
         exit(1)
 
     # After the successful initial registration wait the selected time
-    # (where the configured period is given in minutes so have to be
-    # multiplied by 60) then try to send an update message.
-    sleep(self.config.period * 60)
+    # (where the configured period is given in hours so have to be
+    # multiplied by 60*60) then try to send an update message.
+    sleep(self.config.period * 60 * 60)
     while self.daemon_alive:
       try:
         self.logger.debug('Periodical registration update')
