@@ -2,6 +2,6 @@
 	rotate 5
 	weekly
 	postrotate
-		kill -HUP 'cat /var/run/emi/emir-serp/emir-serp.pid'
+		kill -HUP `cat /var/run/emi/emir-serp/emir-serp.pid`
 	endscript
 }
