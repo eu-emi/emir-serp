@@ -1,0 +1,7 @@
+/var/log/emi/emir-serp/emir-serp.log {
+	rotate 5
+	weekly
+	postrotate
+		kill -HUP 'cat /var/run/emi/emir-serp/emir-serp.pid'
+	endscript
+}

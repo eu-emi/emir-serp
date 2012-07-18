@@ -31,6 +31,7 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 %changelog
 * Thu Jul 18 2012 Ivan Marton <martoni@niif.hu>
 - Adding former package "emird" as obsoleted package to the specification
+- Adding logrotate feature to the package
 
 * Thu Jul 3 2012 Ivan Marton <martoni@niif.hu>
 - Renaming product to emir-serp to provide a less misleading name instead of emird.
@@ -61,6 +62,7 @@ install -m 0644 %{buildroot}/emir-serp/docs/README %{buildroot}%{_defaultdocdir}
 install -m 0644 %{buildroot}/emir-serp/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0755 %{buildroot}/emir-serp/emir-serp %{buildroot}%{_bindir}/
 install -m 0755 %{buildroot}/emir-serp/packaging/RedHat/emir-serp %{buildroot}/etc/init.d/
+install -m 0644 %{buildroot}/emir-serp/packaging/RedHat/logrotate/emir-serp %{buildroot}/etc/logrotate.d/
 rm -rf %{buildroot}/emir-serp
 
 

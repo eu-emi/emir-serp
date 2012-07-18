@@ -3,7 +3,7 @@
 # Dependcies:
 #   sudo yum install python-simplejson
 
-import logging
+import logging, signal
 
 from time   import sleep
 from sys    import exit, path
@@ -15,8 +15,21 @@ path.insert(0, '/usr/lib64/emi/emir-serp')
 from daemon import Daemon
 from EMIR import EMIRConfiguration, EMIRClient
 
+def createloggerhandler(log_file):
+  logger_handler = logging.FileHandler(log_file)
+  logger_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+  logger_handler.setFormatter(logger_formatter)
+  return logger_handler
+
+def reopenloggerhandler(signum, frame):
+  global logger_handler, log_file
+  logger = logging.getLogger('emir-serp')
+  logger.removeHandler(logger_handler)
+  logger_handler = createloggerhandler(log_file)
+  logger.addHandler(logger_handler)
+  
 class EmirSerp(Daemon):
-  def __init__(self, pid_file, config_file, log_file):
+  def __init__(self, pid_file, config_file):
 
     # Initialize EMIR related components
     try: 
@@ -26,12 +39,9 @@ class EmirSerp(Daemon):
       exit(1) 
     self.client = EMIRClient(self.config)
 
-    # Initialize 'emir-serp' logger object
+
+    # Initialize self.logger
     self.logger = logging.getLogger('emir-serp')
-    logger_handler = logging.FileHandler(log_file)
-    logger_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-    logger_handler.setFormatter(logger_formatter)
-    self.logger.addHandler(logger_handler)
     self.logger.setLevel(self.config.loglevel)
 
     # Check wether there is any service entry to be registered
@@ -89,7 +99,6 @@ class EmirSerp(Daemon):
     self.stop()
 
 if __name__ == "__main__":
-
   from optparse import OptionParser
   parser = OptionParser()
   # Location of the configuration file.
@@ -110,8 +119,17 @@ if __name__ == "__main__":
                     help="run in foreground [default: %default]")
   (options, args) = parser.parse_args()
 
+  # Initialize 'emir-serp' logger object
+  global logger_handler, log_file
+
+  log_file = options.log_file
+  logger_handler = createloggerhandler(log_file)
+  logging.getLogger('emir-serp').addHandler(logger_handler)
+
+  signal.signal(signal.SIGHUP, reopenloggerhandler)
+
   # Creating and starting the daemon class and process
-  myDaemon = EmirSerp(options.pid_file, options.config_file, options.log_file)
+  myDaemon = EmirSerp(options.pid_file, options.config_file)
 
   if options.foreground:
     myDaemon.run()
