@@ -35,28 +35,43 @@ DAEMON=/usr/bin/emir-serp
 LASTPID=/var/run/emi/emir-serp/emir-serp.pid
 
 start() {
-        log_daemon_msg "Starting $NAME"
-	su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIR_SERP_USER"
-        RETVAL=$?
-        [ $RETVAL -eq 0 ] && touch "/var/lock/$SERVICE"
-        log_end_msg $RETVAL
-        echo
-        return $RETVAL
-
+        if [ -a "$LASTPID" ]; then
+                status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
+        else
+                log_daemon_msg "Starting $NAME"
+                su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIR_SERP_USER"
+                RETVAL=$?
+                if [ $RETVAL -eq 0 ]; then
+                        touch "/var/lock/$SERVICE"
+                        log_success_msg "-e \tdone"
+                else
+                        log_error_msg "-e \tfailed"
+                fi
+                return $RETVAL
+        fi
 }
+
 stop() {
-        log_daemon_msg "Stopping $NAME"
-        echo
-	kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
-        log_end_msg $?
-        rm -f "/var/lock/$SERVICE"
+        if [ -a "$LASTPID" ]; then
+                log_daemon_msg "Stopping $NAME"
+                kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
+                if [ $? -eq 0 ]; then
+                        rm -f "/var/lock/$SERVICE"
+                        log_success_msg "-e \tdone"
+                else
+                        log_error_msg "-e \tfailed"
+                fi
+        else
+                status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
+        fi
 }
 
 status(){
          if [ -a "$LASTPID" ]; then
                  status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
          else
-                 log_failure_msg "$SERVICE is not running"
+                 log_progress_msg "$SERVICE is not running"
+                 log_end_msg 0
          fi
 }
 
@@ -77,10 +92,8 @@ case "$1" in
 	stop
 	start
 	;;
-   force-reload)
-	;;
   *)
-	echo $"Usage: $0 {start|stop|status|restart|force-reload|help}"
+	echo $"Usage: $0 {start|stop|status|restart|help}"
 	exit 1
 esac
 
