@@ -13,6 +13,7 @@ Packager: EMI emir@niif.hu
 BuildRequires: git
 Requires: python >= 2.4.3, python-simplejson
 BuildRoot: %{_tmppath}/%{name}-%{version}
+Obsoletes: emird
 
 %description
 The EMIR-SERP is a daemon like service that can be executed next to the EMI
@@ -28,6 +29,9 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 
 %changelog
+* Thu Jul 18 2012 Ivan Marton <martoni@niif.hu>
+- Adding former package "emird" as obsoleted package to the specification
+
 * Thu Jul 3 2012 Ivan Marton <martoni@niif.hu>
 - Renaming product to emir-serp to provide a less misleading name instead of emird.
 
