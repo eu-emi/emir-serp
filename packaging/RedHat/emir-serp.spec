@@ -61,7 +61,7 @@ install -m 0644 %{buildroot}/emir-serp/emir-serp.ini %{buildroot}%{_sysconfdir}/
 install -m 0644 %{buildroot}/emir-serp/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0644 %{buildroot}/emir-serp/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
 install -m 0755 %{buildroot}/emir-serp/emir-serp %{buildroot}%{_bindir}/
-install -m 0755 %{buildroot}/emir-serp/packaging/RedHat/emir-serp %{buildroot}/etc/init.d/
+install -m 0755 %{buildroot}/emir-serp/packaging/RedHat/initscript/emir-serp %{buildroot}/etc/init.d/
 install -m 0644 %{buildroot}/emir-serp/packaging/RedHat/logrotate/emir-serp %{buildroot}/etc/logrotate.d/
 rm -rf %{buildroot}/emir-serp
 
