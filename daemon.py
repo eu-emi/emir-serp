@@ -92,10 +92,11 @@ class Daemon(object):
 
 		def sigtermhandler(signum, frame):
 			self.daemon_alive = False
+
 		signal.signal(signal.SIGTERM, sigtermhandler)
 		signal.signal(signal.SIGINT, sigtermhandler)
 
-                logging.getLogger('emir-serp').debug('Daemon started')
+		logging.getLogger('emir-serp').debug('Daemon started')
 		
 		# Write pidfile
 		atexit.register(self.delpid) # Make sure pid file is removed if we quit
