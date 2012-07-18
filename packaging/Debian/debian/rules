@@ -20,7 +20,7 @@ binary-indep: install
 	dh_testroot
 	dh_installdirs
 	dh_installchangelogs 
-	dh_installdocs
+	dh_installdocs docs/README docs/example.json
 	dh_installexamples
 	dh_install
 #	dh_installmenu
