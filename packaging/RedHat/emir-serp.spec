@@ -104,8 +104,22 @@ rm -rf %{buildroot}/emir-serp
 /usr/sbin/useradd -c "EMI" -g emi \
     -s /sbin/nologin -r -d %{_datadir}/emi emi 2>/dev/null || :
 
+%post
+if [ -e /sbin/chkconfig ]; then
+    /sbin/chkconfig --add emir-serp
+elif [ -e /sbin/insserv ]; then
+    /sbin/insserv emi-emir
+fi
+
 %preun
 /etc/init.d/emir-serp status 2>&1 > /dev/null
 if [ "$?" = "0" ]; then 
   /etc/init.d/emir-serp stop >/dev/null 2>&1
 fi
+
+if [ -e /sbin/chkconfig ]; then
+    /sbin/chkconfig --del emi-emir
+elif [ -e /sbin/insserv ]; then
+    /sbin/insserv -r emi-emir
+fi
+
