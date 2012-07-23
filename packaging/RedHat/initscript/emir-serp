@@ -2,6 +2,9 @@
 #
 # EMIR-SERP
 #
+# chkconfig: 235 96 04
+# description: EMIR-SERP
+#
 # Source function library.
 . /etc/rc.d/init.d/functions
 
