@@ -100,6 +100,10 @@ rm -rf %{buildroot}/emir-serp
 # Init script
 #
 %attr(0755 emi emi) "/etc/init.d/emir-serp"
+#
+# Logrotate file
+#
+%attr(0644 emi emi) "/etc/logrotate.d/emir-serp"
 
 
 %pre
