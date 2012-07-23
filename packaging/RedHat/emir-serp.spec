@@ -55,6 +55,7 @@ install -d %{buildroot}%{_localstatedir}/run/emi/emir-serp/
 install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emir-serp
 install -d %{buildroot}/etc/init.d
+install -d %{buildroot}/etc/logrotate.d
 install -m 0644 %{buildroot}/emir-serp/daemon.py %{buildroot}%{_libdir}/emi/emir-serp/
 install -m 0644 %{buildroot}/emir-serp/EMIR.py %{buildroot}%{_libdir}/emi/emir-serp/
 install -m 0644 %{buildroot}/emir-serp/emir-serp.ini %{buildroot}%{_sysconfdir}/emi/emir-serp/
