@@ -31,7 +31,10 @@ case "$1" in
 	chown -R emi:emi /var/run/emi
 	chmod 700 /var/run/emi/emir-serp
 
-	insserv emir-serp
+	if [ -e /sbin/insserv ]
+	then
+		/sbin/insserv emir-serp
+	fi
 	;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
