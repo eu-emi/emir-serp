@@ -95,7 +95,7 @@ class EMIRConfiguration:
         raise Exception("Cert file cannot be read on path: %s" % self.cert)
     
   def getServiceEntries(self):
-    return [x for x in self.parser.sections() if x != 'emir']
+    return [x for x in self.parser.sections() if x != 'emir-serp']
 
   def getServiceEntry(self, name):
     if not name in self.parser.sections():
