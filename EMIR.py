@@ -98,18 +98,13 @@ class EMIRConfiguration:
     return [x for x in self.parser.sections() if x != 'emir']
 
   def getServiceEntry(self, name):
-    translations = {
-      'service_name': 'Service_Name',
-      'service_type': 'Service_Type',
-      'service_endpoint_url': 'Service_Endpoint_URL',
-      'service_endpoint_interfacename': 'Service_Endpoint_InterfaceName',
-    }
     if not name in self.parser.sections():
       raise Exception('Invalid section name: %s' % name)
 
     # Error if neither URL nor JSON file is given
-    if not 'service_endpoint_url' in self.parser.options(name) and not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
-      raise Exception("Service_Endpoint_Url or json_file_location has to be defined in '%s' section " % name)
+    if not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
+      logging.getLogger('emir-serp').warning("json_dir_location or json_file_location has to be defined in '%s' section " % name)
+      return []
 
     # If JSON file is given use it
     if 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
@@ -148,14 +143,8 @@ class EMIRConfiguration:
             raise Exception("No proper json document has been found in the '%s' directory" % json_dir)
           return json_list
 
-    # If no JSON file or directory are given, use the other attributes
-    result = {}
-    for name, value in ( (x, y) for (x, y) in self.parser.items(name) if x != 'json_file_location' and x != 'json_dir_location'):
-      if name in translations.keys():
-        result[translations[name]] = value
-      else:
-        result[name] = value
-    return result
+    # If any other issue happens this catch-all return reuturns an empty list
+    return []
 
 import urllib, urllib2, httplib
 import datetime
@@ -212,6 +201,9 @@ class EMIRClient:
             '$date': (datetime.datetime.utcnow()+datetime.timedelta(hours=self.config.validity)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
           }
           # -- End of hack ;-)
+
+          # Check of entry could be placed here
+
           if 'Service_Endpoint_ID' in item and 'Service_Endpoint_URL' in item:
             logging.getLogger('emir-serp').debug('REGISTRATION: Endpoint ID: %s; URL: %s' % (item['Service_Endpoint_ID'], item['Service_Endpoint_URL']))
           elif 'Service_Endpoint_ID' in item:
