@@ -3,8 +3,8 @@
 #
 Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name: emir-serp
-Version: 1.0.1
-Release: 1%{?dist}
+Version: 1.1.0
+Release: 0%{?dist}
 License: CC-BY-SA
 Group: Infrastructure Services
 URL: https://github.com/eu-emi/emiregistry
@@ -29,6 +29,14 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 
 %changelog
+* Thu Sep 1 2012 Ivan Marton <martoni@niif.hu>
+- New mainstream version came out
+- Adding logrotate feature and support
+- Debian support
+- Simplified and more easy-to-use configuration with better default values
+- Improved robustness in case of configuration or server side errors
+- Improved error reporting and error proxy
+
 * Thu Jul 18 2012 Ivan Marton <martoni@niif.hu>
 - Adding former package "emird" as obsoleted package to the specification
 - Adding logrotate feature to the package
@@ -48,6 +56,9 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 %prep
 rm -rf %{name}-%{version}
 git clone https://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
+cd %{buildroot}/emir-serp/
+git checkout v1.1.0
+cd -
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/
 install -d %{buildroot}%{_bindir}
