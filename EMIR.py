@@ -110,15 +110,18 @@ class EMIRConfiguration:
     if 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
       json_file = self.parser.get(name,'json_file_location')
       if not exists(json_file):
-        raise Exception("JSON file cannot be found on path: %s" % json_file)
+        logging.getLogger('emir-serp').error("JSON file cannot be found on path: %s" % json_file)
+        return []
       if not access(json_file, R_OK):
-        raise Exception("JSON file cannot be read on path: %s" % json_file)
+        logging.getLogger('emir-serp').error("JSON file cannot be read on path: %s" % json_file)
+        return []
       fp = open(json_file)
       jsondoc = ''
       try:
         jsondoc = json.load(fp)
       except ValueError:
-        raise Exception("JSON object problem in file: %s" % json_file)
+        logging.getLogger('emir-serp').error("JSON cannot be converted in file: %s" % json_file)
+        return []
       return jsondoc
 
     if 'json_dir_location' in self.parser.options(name):
@@ -126,7 +129,8 @@ class EMIRConfiguration:
       try:
         filelist = listdir(json_dir)
       except:
-        raise Exception("Dir '%s' is not a directory" % json_dir)
+        logging.getLogger('emir-serp').error("'%s' is not a directory" % json_dir)
+        return []
       json_list = []
       for json_file in filelist:
         jsondoc = []
@@ -140,7 +144,8 @@ class EMIRConfiguration:
         else:
           json_list.extend(jsondoc)
           if not json_list:
-            raise Exception("No proper json document has been found in the '%s' directory" % json_dir)
+            logging.getLogger('emir-serp').error("No files with proper json document has been found in the '%s' directory" % json_dir)
+            return []
           return json_list
 
     # If any other issue happens this catch-all return reuturns an empty list
