@@ -38,14 +38,14 @@ start() {
         if [ -a "$LASTPID" ]; then
                 status_of_proc -p "$LASTPID" "$SERVICE" "$NAME"
         else
-                log_daemon_msg "Starting $NAME"
                 su -s /bin/bash -c "$DAEMON -p $LASTPID" "$EMIR_SERP_USER"
                 RETVAL=$?
                 if [ $RETVAL -eq 0 ]; then
+                	log_daemon_msg "Starting $NAME"
                         touch "/var/lock/$SERVICE"
                         log_success_msg "-e \tdone"
                 else
-                        log_error_msg "-e \tfailed"
+			log_failure_msg "Starting $NAME"
                 fi
                 return $RETVAL
         fi
@@ -53,12 +53,13 @@ start() {
 
 stop() {
         if [ -a "$LASTPID" ]; then
-                log_daemon_msg "Stopping $NAME"
                 kill -s SIGTERM `cat $LASTPID` >/dev/null 2>&1
                 if [ $? -eq 0 ]; then
+                	log_daemon_msg "Stopping $NAME"
                         rm -f "/var/lock/$SERVICE"
                         log_success_msg "-e \tdone"
                 else
+			log_failure_msg "Stopping $NAME"
                         log_error_msg "-e \tfailed"
                 fi
         else
