@@ -240,5 +240,5 @@ class EMIRClient:
       if not isinstance(service_entry, list):
         service_entry = [service_entry]
       for item in service_entry:
-        self.communicate('DELETE', '/serviceadmin?Service_Endpoint_URL='+item['Service_Endpoint_URL'])
+        self.communicate('DELETE', '/serviceadmin?Service_Endpoint_ID='+item['Service_Endpoint_ID'])
 
