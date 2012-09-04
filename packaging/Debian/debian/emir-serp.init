@@ -88,6 +88,8 @@ case "$1" in
   status)
 	status 
 	;;
+  reload)
+  force-reload)
   restart)
 	stop
 	start
