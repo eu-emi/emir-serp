@@ -63,6 +63,9 @@ class EmirSerp(Daemon):
     # Try to send registration message. If do not manage to fall back
     # to update. For example because of already existing registration
     # entries.
+    # initial registration:
+    # 1: do "register"
+    # 2: if "register" fails, try "update"
     try:
       self.logger.debug('Registering service entries')
       self.client.register()
@@ -78,13 +81,20 @@ class EmirSerp(Daemon):
     # (where the configured period is given in hours so have to be
     # multiplied by 60*60) then try to send an update message.
     sleep(self.config.period * 60 * 60)
+    # periodic registration
+    # 1: do "update"
+    # 2: if "update" fails, try "register" (maybe the EMIR lost the data)
     while self.daemon_alive:
       try:
         self.logger.debug('Periodical registration update')
         self.client.update()
       except Exception, ex:
-        self.logger.error("Update failed: %s" % ex)
-        exit(1)
+        try:
+          self.logger.debug('Falling back to register service entry instead of update. Data may lost on server side.')
+          self.client.register()
+        except Exception, ex:
+          self.logger.error("Update failed: %s" % ex)
+          exit(1)
       sleep(self.config.period * 60)
 
     # Delete registered entries
