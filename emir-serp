@@ -95,7 +95,7 @@ class EmirSerp(Daemon):
         except Exception, ex:
           self.logger.error("Update failed: %s" % ex)
           exit(1)
-      sleep(self.config.period * 60)
+      sleep(self.config.period * 60 * 60)
 
     # Delete registered entries
     try:
