@@ -143,10 +143,10 @@ class EMIRConfiguration:
           json_list.append(jsondoc)
         else:
           json_list.extend(jsondoc)
-          if not json_list:
-            logging.getLogger('emir-serp').error("No files with proper json document has been found in the '%s' directory" % json_dir)
-            return []
-          return json_list
+      if not json_list:
+        logging.getLogger('emir-serp').error("No files with proper json document has been found in the '%s' directory" % json_dir)
+        return []
+      return json_list
 
     # If any other issue happens this catch-all return reuturns an empty list
     return []
