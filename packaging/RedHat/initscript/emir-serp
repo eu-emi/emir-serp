@@ -15,6 +15,7 @@ SERVICE=emir-serp
 DAEMON=/usr/bin/emir-serp
 EMIR_SERP_USER=emi
 LASTPID=/var/run/emi/emir-serp/emir-serp.pid
+LOCKFILE=/var/lock/subsys/$SERVICE
 
 function start {
   if [ -f $LASTPID ]; then
@@ -26,6 +27,7 @@ function start {
     echo -n "$NAME startup"
     [ "$RETVAL" -eq 0 ] && success || failure 
     echo
+    [ "$RETVAL" -eq 0 ] && touch $LOCKFILE
   fi
 }
 
@@ -42,6 +44,7 @@ function stop {
     failure
   fi
   echo
+  [ "$RETVAL" -eq 0 ] && rm -f $LOCKFILE
 }
 
 
