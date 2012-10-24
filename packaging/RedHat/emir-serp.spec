@@ -88,7 +88,7 @@ rm -rf %{buildroot}/emir-serp
 #
 # Log files
 #
-%dir %attr(0700 emi emi) "/var/log/emi/emir-serp"
+%dir %attr(0755 emi emi) "/var/log/emi/emir-serp"
 #
 # Lib files
 #
@@ -106,7 +106,7 @@ rm -rf %{buildroot}/emir-serp
 #
 # Lock files
 #
-%dir %attr(0700 emi emi) "%{_localstatedir}/run/emi/emir-serp"
+%dir %attr(0755 emi emi) "%{_localstatedir}/run/emi/emir-serp"
 #
 # Init script
 #
