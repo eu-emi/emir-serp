@@ -18,9 +18,9 @@ Obsoletes: emird
 %description
 The EMIR-SERP is a daemon like service that can be executed next to the EMI
 services (preferably on the same machine) that are unable to register
-themselves into to EMIR Infrastucture.
+themselves into to EMIR Infrastructure
 It behaves as an ordinary client ( uses exactly the same, standard
-RESTful API as the other clients would do) when perform the automatical
+RESTful API as the other clients would do) when perform the automatically
 and periodical registration and update against the configured EMI
 Registry service instead of the services or other manual administration
 tools.
