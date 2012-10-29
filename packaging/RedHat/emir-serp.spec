@@ -3,7 +3,7 @@
 #
 Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name: emir-serp
-Version: 1.1.0
+Version: 1.2.0
 Release: 0%{?dist}
 License: CC-BY-SA
 Group: Infrastructure Services
@@ -11,7 +11,7 @@ URL: https://github.com/eu-emi/emiregistry
 BuildArch: noarch
 Packager: EMI emir@niif.hu
 BuildRequires: git
-Requires: python >= 2.4.3, python-simplejson
+Requires: python >= 2.4.3, python-simplejson, python-ldap
 BuildRoot: %{_tmppath}/%{name}-%{version}
 Obsoletes: emird
 
@@ -27,11 +27,14 @@ tools.
 
 This package contains the EMI Registry - Service Endpoint Record Publisher.
 
+%changelog
+* Mon Oct 29 2012 Ivan Marton <martoni@niif.hu>
+- Adding local BDII LDAP support
+- Fixing release and packaging issues
 
 * Wed Oct 24 2012 Ivan Marton <martoni@niif.hu>
 - Fixing lintian errors like directory permissions and subsys usage
 
-%changelog
 * Thu Sep 1 2012 Ivan Marton <martoni@niif.hu>
 - New mainstream version came out
 - Adding logrotate feature and support
@@ -60,7 +63,7 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 rm -rf %{name}-%{version}
 git clone https://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
 cd %{buildroot}/emir-serp/
-#git checkout v1.1.0
+#git checkout v1.2.0
 cd -
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/
