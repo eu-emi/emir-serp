@@ -102,8 +102,7 @@ class EMIRConfiguration:
       raise Exception('Invalid section name: %s' % name)
 
     # Error if neither URL nor JSON file is given
-    if not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name) and
-       not 'resource_bdii_url' in self.parser.options(name):
+    if not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name) and not 'resource_bdii_url' in self.parser.options(name):
       logging.getLogger('emir-serp').warning("json_dir_location, json_file_location or resource_bdii_url has to be defined in '%s' section " % name)
       return []
 
@@ -125,8 +124,8 @@ class EMIRConfiguration:
       if not ldap_url.path or not ldap_url.path[1:]:
         logging.getLogger('emir-serp').info("base didn't found in resource_bdii_url, default 'o=glue' is used (in section %s)" % name)
       host = ldap_url.hostname
-      port = ldap_url.port if ldap_url.port is not None else '389'
-      base = ldap_url.path[1:] if not ldap_url.path or not ldap_url.path[1:] else 'o=glue'
+      port = str(ldap_url.port) if ldap_url.port is not None else '389'
+      base = ldap_url.path[1:] if ldap_url.path and ldap_url.path[1:] else 'o=glue'
       filters = '(|(objectClass=GLUE2Service)(objectClass=GLUE2Endpoint))'
       ATTRIBUTES=['GLUE2EntityName', 
             'GLUE2EntityCreationTime',
@@ -163,12 +162,17 @@ class EMIRConfiguration:
       # Fetch data from LDAP server
       ldap_result_set = []
       while 1:
-        ldap_result_type, ldap_result_data = ldap_connection.result(ldap_search_result, 0)
+        try:
+          ldap_result_type, ldap_result_data = ldap_connection.result(ldap_search_result, 0)
+        except ldap.LDAPError, ex:
+          logging.getLogger('emir-serp').error("LDAP Error in section %s: %s" % (name, ex[0]['desc']))
         if (ldap_result_data == []):
           break
         else:
-        if ldap_result_type == ldap.RES_SEARCH_ENTRY:
-          ldap_result_set.append(result_data)
+          if ldap_result_type == ldap.RES_SEARCH_ENTRY:
+            ldap_result_set.append(ldap_result_data)
+      if ldap_result_set == []:
+        return []
       
       # Parse and properly merge LDAP results
       mapping = {
@@ -196,7 +200,16 @@ class EMIRConfiguration:
 
       for endpoint in endpoints:
         endpoint.update(services[endpoint["GLUE2EndpointServiceForeignKey"][0]])
-        result.append(endpoint)
+        new_endpoint = {}
+        for key, value in endpoint.items():
+          if key in mapping.keys():
+            if key == 'GLUE2EndpointCapability':
+              new_endpoint[mapping[key]]=value
+            else:
+              new_endpoint[mapping[key]]=value[0]
+          else:
+            new_endpoint[key]=value[0]
+        result.append(new_endpoint)
       return result 
 
     # If JSON watch dir is given, use it
@@ -280,6 +293,10 @@ class EMIRClient:
     for entry in self.config.getServiceEntries():
       try:
         service_entry = self.config.getServiceEntry(entry)
+        import pickle
+
+        thefile = open('/tmp/test.txt', 'w')
+        pickle.dump(service_entry, thefile)
         if not isinstance(service_entry, list):
           service_entry = [service_entry]
         # Service creation time and expire on timestamp hacking because the too strict
