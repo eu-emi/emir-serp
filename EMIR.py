@@ -102,28 +102,104 @@ class EMIRConfiguration:
       raise Exception('Invalid section name: %s' % name)
 
     # Error if neither URL nor JSON file is given
-    if not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
-      logging.getLogger('emir-serp').warning("json_dir_location or json_file_location has to be defined in '%s' section " % name)
+    if not 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name) and
+       not 'resource_bdii_url' in self.parser.options(name):
+      logging.getLogger('emir-serp').warning("json_dir_location, json_file_location or resource_bdii_url has to be defined in '%s' section " % name)
       return []
 
-    # If JSON file is given use it
-    if 'json_file_location' in self.parser.options(name) and not 'json_dir_location' in self.parser.options(name):
-      json_file = self.parser.get(name,'json_file_location')
-      if not exists(json_file):
-        logging.getLogger('emir-serp').error("JSON file cannot be found on path: %s" % json_file)
+    # If resource BDII LDAP URL is given, use it
+    if 'resource_bdii_url' in self.parser.options(name):
+      resource_bdii_url = self.parser.get(name,'resource_bdii_url')
+      if not resource_bdii_url:
+        logging.getLogger('emir-serp').error("'resource_bdii_url' is present but empty in section %s" % name)
+      from urlparse import urlparse
+      ldap_url = urlparse(resource_bdii_url)
+      if ldap_url.scheme != 'ldap':
+        logging.getLogger('emir-serp').error("'%s' is not supported scheme in resource_bdii_url (found in section %s)" % (ldap_url.scheme,name))
         return []
-      if not access(json_file, R_OK):
-        logging.getLogger('emir-serp').error("JSON file cannot be read on path: %s" % json_file)
+      if not ldap_url.hostname:
+        logging.getLogger('emir-serp').error("hostname is missing from resource_bdii_url in section %s" % name)
         return []
-      fp = open(json_file)
-      jsondoc = ''
-      try:
-        jsondoc = json.load(fp)
-      except ValueError:
-        logging.getLogger('emir-serp').error("JSON cannot be converted in file: %s" % json_file)
-        return []
-      return jsondoc
+      if ldap_url.port is None:
+        logging.getLogger('emir-serp').info("port didn't found in resource_bdii_url, default '389' is used (in section %s)" % name)
+      if not ldap_url.path or not ldap_url.path[1:]:
+        logging.getLogger('emir-serp').info("base didn't found in resource_bdii_url, default 'o=glue' is used (in section %s)" % name)
+      host = ldap_url.hostname
+      port = ldap_url.port if ldap_url.port is not None else '389'
+      base = ldap_url.path[1:] if not ldap_url.path or not ldap_url.path[1:] else 'o=glue'
+      filters = '(|(objectClass=GLUE2Service)(objectClass=GLUE2Endpoint))'
+      ATTRIBUTES=['GLUE2EntityName', 
+            'GLUE2EntityCreationTime',
+            'GLUE2EntityValidity',
+            'GLUE2ServiceID',
+            'GLUE2ServiceType',
+            'GLUE2EndpointID',
+            'GLUE2EndpointCapability',
+            'GLUE2EndpointInterfaceName',
+            'GLUE2EndpointInterfaceExtension',
+            'GLUE2EndpointQualityLevel',
+            'GLUE2EndpointURL',
+            'GLUE2EndpointInterfaceVersion',
+            'GLUE2EndpointTechnology',
+            'GLUE2EndpointServiceForeignKey',
+            ]
 
+      logging.getLogger('emir-serp').debug("Retrieving data from %s://%s:%s/%s" % (ldap_url.scheme,host,port,base))
+      
+      # Connect to LDAP server
+      import ldap
+      ldap_connection=ldap.initialize(ldap_url.scheme+"://"+host+":"+port)
+      try:
+        ldap_search_result = ldap_connection.search(
+          base,
+          ldap.SCOPE_SUBTREE, # this is the default of ldapsearch
+          filters,
+          ATTRIBUTES
+        )
+      except ldap.SERVER_DOWN, error_message:
+        logging.getLogger('emir-serp').error("Error message from server %s://%s:%s: %s" % (ldap_url.scheme,host,port,error_message[0]['desc']))
+        return []
+
+      # Fetch data from LDAP server
+      ldap_result_set = []
+      while 1:
+        ldap_result_type, ldap_result_data = ldap_connection.result(ldap_search_result, 0)
+        if (ldap_result_data == []):
+          break
+        else:
+        if ldap_result_type == ldap.RES_SEARCH_ENTRY:
+          ldap_result_set.append(result_data)
+      
+      # Parse and properly merge LDAP results
+      mapping = {
+        'GLUE2ServiceID': 'Service_ID',
+        'GLUE2EntityName': 'Service_Name',
+        'GLUE2ServiceType': 'Service_Type',
+        'GLUE2EndpointID': 'Service_Endpoint_ID',
+        'GLUE2EndpointURL': 'Service_Endpoint_URL',
+        'GLUE2EndpointCapability': 'Service_Endpoint_Capability',
+        'GLUE2EndpointInterfaceName': 'Service_Endpoint_InterfaceName',
+        'GLUE2EndpointInterfaceVersion': 'Service_Endpoint_InterfaceVersion',
+        'GLUE2EndpointTechnology': 'Service_Endpoint_Technology'
+      } 
+
+      services = {}
+      endpoints = []
+      result = []
+
+      for entry in ldap_result_set:
+        ldap_id, value = entry[0]
+        if ldap_id.startswith("GLUE2ServiceID"):
+          services[value["GLUE2ServiceID"][0]] = value
+        if ldap_id.startswith("GLUE2EndpointID"):
+          endpoints.append(value)
+
+      for endpoint in endpoints:
+        endpoint.update(services[endpoint["GLUE2EndpointServiceForeignKey"][0]])
+        result.append(endpoint)
+      return result 
+
+    # If JSON watch dir is given, use it
     if 'json_dir_location' in self.parser.options(name):
       json_dir = self.parser.get(name,'json_dir_location')
       try:
@@ -147,6 +223,24 @@ class EMIRConfiguration:
         logging.getLogger('emir-serp').error("No files with proper json document has been found in the '%s' directory" % json_dir)
         return []
       return json_list
+
+    # If JSON file is given use it
+    if 'json_file_location' in self.parser.options(name):
+      json_file = self.parser.get(name,'json_file_location')
+      if not exists(json_file):
+        logging.getLogger('emir-serp').error("JSON file cannot be found on path: %s" % json_file)
+        return []
+      if not access(json_file, R_OK):
+        logging.getLogger('emir-serp').error("JSON file cannot be read on path: %s" % json_file)
+        return []
+      fp = open(json_file)
+      jsondoc = ''
+      try:
+        jsondoc = json.load(fp)
+      except ValueError:
+        logging.getLogger('emir-serp').error("JSON cannot be converted in file: %s" % json_file)
+        return []
+      return jsondoc
 
     # If any other issue happens this catch-all return reuturns an empty list
     return []
