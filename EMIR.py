@@ -187,6 +187,9 @@ class EMIRConfiguration:
         'GLUE2EndpointTechnology': 'Service_Endpoint_Technology',
         'GLUE2EndpointQualityLevel': 'Service_Endpoint_QualityLevel',
         'GLUE2EntityCreationTime': 'Service_CreationTime',
+        'GLUE2ServiceAdminDomainForeignKey': 'Service_Admin_Domain',
+        'GLUE2EndpointImplementationName': 'Service_Endpoint_Implementation_Name',
+        'GLUE2EndpointImplementationVersion': 'Service_Endpoint_Implementation_Version',
       } 
 
       services = {}
@@ -205,7 +208,7 @@ class EMIRConfiguration:
         new_endpoint = {}
         for key, value in endpoint.items():
           if key in mapping.keys() and key not in ['GLUE2EndpointServiceForeignKey']:
-            if key == 'GLUE2EndpointCapability':
+            if key in ['GLUE2EndpointCapability']:
               new_endpoint[mapping[key]]=value
             else:
               new_endpoint[mapping[key]]=value[0]
