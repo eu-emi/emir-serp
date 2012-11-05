@@ -120,11 +120,11 @@ class EMIRConfiguration:
         logging.getLogger('emir-serp').error("hostname is missing from resource_bdii_url in section %s" % name)
         return []
       if ldap_url.port is None:
-        logging.getLogger('emir-serp').info("port didn't found in resource_bdii_url, default '389' is used (in section %s)" % name)
+        logging.getLogger('emir-serp').info("port didn't found in resource_bdii_url, default '2170' is used (in section %s)" % name)
       if not ldap_url.path or not ldap_url.path[1:]:
         logging.getLogger('emir-serp').info("base didn't found in resource_bdii_url, default 'o=glue' is used (in section %s)" % name)
       host = ldap_url.hostname
-      port = str(ldap_url.port) if ldap_url.port is not None else '389'
+      port = str(ldap_url.port) if ldap_url.port is not None else '2170'
       base = ldap_url.path[1:] if ldap_url.path and ldap_url.path[1:] else 'o=glue'
       filters = '(|(objectClass=GLUE2Service)(objectClass=GLUE2Endpoint))'
       ATTRIBUTES=['GLUE2EntityName', 
@@ -184,7 +184,9 @@ class EMIRConfiguration:
         'GLUE2EndpointCapability': 'Service_Endpoint_Capability',
         'GLUE2EndpointInterfaceName': 'Service_Endpoint_InterfaceName',
         'GLUE2EndpointInterfaceVersion': 'Service_Endpoint_InterfaceVersion',
-        'GLUE2EndpointTechnology': 'Service_Endpoint_Technology'
+        'GLUE2EndpointTechnology': 'Service_Endpoint_Technology',
+        'GLUE2EndpointQualityLevel': 'Service_Endpoint_QualityLevel',
+        'GLUE2EntityCreationTime': 'Service_CreationTime',
       } 
 
       services = {}
@@ -202,13 +204,11 @@ class EMIRConfiguration:
         endpoint.update(services[endpoint["GLUE2EndpointServiceForeignKey"][0]])
         new_endpoint = {}
         for key, value in endpoint.items():
-          if key in mapping.keys():
+          if key in mapping.keys() and key not in ['GLUE2EndpointServiceForeignKey']:
             if key == 'GLUE2EndpointCapability':
               new_endpoint[mapping[key]]=value
             else:
               new_endpoint[mapping[key]]=value[0]
-          else:
-            new_endpoint[key]=value[0]
         result.append(new_endpoint)
       return result 
 
