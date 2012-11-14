@@ -3,7 +3,7 @@
 #
 Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name: emir-serp
-Version: 1.2.0
+Version: 1.2.1
 Release: 0%{?dist}
 License: CC-BY-SA
 Group: Infrastructure Services
@@ -28,6 +28,9 @@ tools.
 This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 %changelog
+* Wed Nov 14 2012 Ivan Marton <martoni@niif.hu>
+- Upstream package update - restoring python 2.4 support
+
 * Mon Oct 29 2012 Ivan Marton <martoni@niif.hu>
 - Adding local BDII LDAP support
 - Fixing release and packaging issues
@@ -63,7 +66,7 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 rm -rf %{name}-%{version}
 git clone https://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
 cd %{buildroot}/emir-serp/
-#git checkout v1.2.0
+git checkout v1.2.1
 cd -
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/

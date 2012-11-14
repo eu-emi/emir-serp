@@ -1,3 +1,9 @@
+emir-serp (1.2.1-1) stable; urgency=low
+
+  * New upstream release
+
+ -- Ivan Marton <martoni@niif.hu>  Wed, 14 Nov 2012 10:39:20 +0100
+
 emir-serp (1.2.0-1) stable; urgency=low
 
   * New upstream release (introducing LDAP support)
