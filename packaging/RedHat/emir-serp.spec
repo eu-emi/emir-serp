@@ -135,7 +135,7 @@ rm -rf %{buildroot}/emir-serp
 if [ -e /sbin/chkconfig ]; then
     /sbin/chkconfig --add emir-serp
 elif [ -e /sbin/insserv ]; then
-    /sbin/insserv emi-emir
+    /sbin/insserv emir-serp
 fi
 
 %preun
@@ -145,8 +145,8 @@ if [ "$?" = "0" ]; then
 fi
 
 if [ -e /sbin/chkconfig ]; then
-    /sbin/chkconfig --del emi-emir
+    /sbin/chkconfig --del emir-serp
 elif [ -e /sbin/insserv ]; then
-    /sbin/insserv -r emi-emir
+    /sbin/insserv -r emir-serp
 fi
 
