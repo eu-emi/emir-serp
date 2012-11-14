@@ -124,8 +124,12 @@ class EMIRConfiguration:
       if not ldap_url.path or not ldap_url.path[1:]:
         logging.getLogger('emir-serp').info("base didn't found in resource_bdii_url, default 'o=glue' is used (in section %s)" % name)
       host = ldap_url.hostname
-      port = str(ldap_url.port) if ldap_url.port is not None else '2170'
-      base = ldap_url.path[1:] if ldap_url.path and ldap_url.path[1:] else 'o=glue'
+      port = '2170'
+      if ldap_url.port:
+        port = str(ldap_url.port)
+      base = 'o=glue'
+      if ldap_url.path and ldap_url.path[1:]:
+        base = ldap_url.path[1:]
       filters = '(|(objectClass=GLUE2Service)(objectClass=GLUE2Endpoint))'
       ATTRIBUTES=['GLUE2EntityName', 
             'GLUE2EntityCreationTime',
