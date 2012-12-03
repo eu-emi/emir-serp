@@ -11,6 +11,40 @@ from os import listdir, access, R_OK
 # INI style configuration parsing
 from ConfigParser import SafeConfigParser
 
+def parse_url(url):
+   from urlparse import urlparse
+   was_ldap = False
+   if url.startswith('ldap://'):
+     was_ldap = True
+     url = url.replace('ldap://', 'http://', 1)
+   (scheme, netloc, path, params, query, fragment) = urlparse(url)
+   if was_ldap:
+     scheme = 'ldap'
+   username = ""
+   password = ""
+   if "@" in netloc:
+       username = netloc.rsplit("@", 1)[0]
+       if ":" in username:
+           username, password = username.split(":", 1)
+   hostname = ""
+   netloc_ = netloc.split('@')[-1]
+   if '[' in netloc_ and ']' in netloc_:
+       hostname = netloc_.split(']')[0][1:].lower()
+   elif ':' in netloc_:
+       hostname = netloc_.split(':')[0].lower()
+   elif netloc_ == '':
+       hostname = ""
+   else:
+       hostname = netloc_.lower()
+   port = None
+   netloc_ = netloc.split('@')[-1].split(']')[-1]
+   if ':' in netloc_:
+       port = int(netloc_.split(':')[1], 10)
+   class Result:
+    def __init__(self, **kwds):
+      self.__dict__.update(kwds)
+   return Result(scheme=scheme,hostname=hostname,port=port,username=username,password=password,path=path,params=params,query=query,fragment=fragment)
+
 class EMIRConfiguration:
 
   def __init__(self, config_file):
@@ -111,8 +145,7 @@ class EMIRConfiguration:
       resource_bdii_url = self.parser.get(name,'resource_bdii_url')
       if not resource_bdii_url:
         logging.getLogger('emir-serp').error("'resource_bdii_url' is present but empty in section %s" % name)
-      from urlparse import urlparse
-      ldap_url = urlparse(resource_bdii_url)
+      ldap_url = parse_url(resource_bdii_url)
       if ldap_url.scheme != 'ldap':
         logging.getLogger('emir-serp').error("'%s' is not supported scheme in resource_bdii_url (found in section %s)" % (ldap_url.scheme,name))
         return []
