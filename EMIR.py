@@ -391,5 +391,8 @@ class EMIRClient:
       if not isinstance(service_entry, list):
         service_entry = [service_entry]
       for item in service_entry:
-        self.communicate('DELETE', '/serviceadmin?Service_Endpoint_ID='+item['Service_Endpoint_ID'])
+        try:
+          self.communicate('DELETE', '/serviceadmin?Service_Endpoint_ID='+item['Service_Endpoint_ID'])
+        except Exception, ex:
+          logging.getLogger('emir-serp').error('Error during deletion: %s' % ex)
 
