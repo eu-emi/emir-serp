@@ -3,7 +3,7 @@
 #
 Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name: emir-serp
-Version: 1.2.1
+Version: 1.2.2
 Release: 0%{?dist}
 License: CC-BY-SA
 Group: Infrastructure Services
@@ -28,6 +28,9 @@ tools.
 This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 %changelog
+* Thu Dec 6 2012 Ivan Marton <martoni@niif.hu>
+- Upstream package update - Making emir-serp more robustful by preventing exit while invalid registrations
+
 * Wed Nov 14 2012 Ivan Marton <martoni@niif.hu>
 - Upstream package update - restoring python 2.4 support
 
