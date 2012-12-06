@@ -69,7 +69,7 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 rm -rf %{name}-%{version}
 git clone https://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
 cd %{buildroot}/emir-serp/
-git checkout v1.2.1
+git checkout v1.2.2
 cd -
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/
