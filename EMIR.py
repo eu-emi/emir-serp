@@ -342,10 +342,7 @@ class EMIRClient:
     for entry in self.config.getServiceEntries():
       try:
         service_entry = self.config.getServiceEntry(entry)
-        import pickle
 
-        thefile = open('/tmp/test.txt', 'w')
-        pickle.dump(service_entry, thefile)
         if not isinstance(service_entry, list):
           service_entry = [service_entry]
         # Service creation time and expire on timestamp hacking because the too strict
