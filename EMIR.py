@@ -377,12 +377,34 @@ class EMIRClient:
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
     self.communicate('PUT', '/serviceadmin', parameters, headers)
+    if self.config.secureUrl:
+      proto = 'https'
+    else:
+      proto = 'http'
+    for item in self.compose_registration_update_message():
+      if 'Service_Endpoint_ID' in item:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s://%s:%s/services?Service_Endpoint_ID=%s' % (proto , self.config.host, self.config.port, item['Service_Endpoint_ID']))
+      elif 'Service_Endpoint_URL' in item:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s://%s:%s/services?Service_Endpoint_URL=%s' % (proto , self.config.host, self.config.port, item['Service_Endpoint_URL']))
+      else:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s' % item)
 
   def register(self):
     # Composing and sending registration message
     parameters = json.dumps(self.compose_registration_update_message())
     headers = {"Content-type": "application/json", "Accept": "application/json, text/plain"}
     self.communicate('POST', '/serviceadmin', parameters, headers)
+    if self.config.secureUrl:
+      proto = 'https'
+    else:
+      proto = 'http'
+    for item in self.compose_registration_update_message():
+      if 'Service_Endpoint_ID' in item:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s://%s:%s/services?Service_Endpoint_ID=%s' % (proto , self.config.host, self.config.port, item['Service_Endpoint_ID']))
+      elif 'Service_Endpoint_URL' in item:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s://%s:%s/services?Service_Endpoint_URL=%s' % (proto , self.config.host, self.config.port, item['Service_Endpoint_URL']))
+      else:
+        logging.getLogger('emir-serp').info('REGISTRATION Successful. Check here: %s' % item)
 
   def delete(self):
     # Composing and sending delete message
