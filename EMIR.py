@@ -77,6 +77,15 @@ class EMIRConfiguration:
       else:
         setattr(self,attr,attributes[attr][1])
 
+    # Allow 'cert', 'key', and 'cadir' attributes to be defined in 'common' section
+    if self.parser.has_section('common'):
+      if self.cert == attributes['cert'][1] and self.parser.get('common','cert'):
+        cert = self.parser.get('common','cert')
+      if self.key == attributes['key'][1] and self.parser.get('common','key'):
+        key = self.parser.get('common','key')
+      if self.cadir == attributes['cadir'][1] and self.parser.get('common','cadir'):
+        cadir = self.parser.get('common','cadir')
+
     # Verification 
     # TODO: verification pattern and logic here
 
