@@ -1,19 +1,18 @@
 #
 # Spec file for the EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 #
-Summary: EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
-Name: emir-serp
-Version: 1.2.2
-Release: 0%{?dist}
-License: CC-BY-SA
-Group: Infrastructure Services
-URL: https://github.com/eu-emi/emiregistry
-BuildArch: noarch
-Packager: EMI emir@niif.hu
-BuildRequires: git
-Requires: python >= 2.4.3, python-simplejson, python-ldap
-BuildRoot: %{_tmppath}/%{name}-%{version}
-Obsoletes: emird
+Summary:	EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
+Name:		emir-serp
+Version:	1.2.2
+Release:	1%{?dist}
+License:	CC-BY-SA
+Group:		System Environment/Daemons
+URL:		https://github.com/eu-emi/emiregistry
+BuildArch:	noarch
+Requires:	python >= 2.4.3, python-simplejson, python-ldap
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source:		%{name}-%{version}.tar.gz
+Obsoletes:	emird
 
 %description
 The EMIR-SERP is a daemon like service that can be executed next to the EMI
@@ -28,6 +27,14 @@ tools.
 This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 %changelog
+* Wed Apr 10 2013 Anders Waananen <waananen> - 1.2.2-1
+- Bump release field
+- Reformat spec header with tabs
+- Drop packager
+- Drop git requirement and use source tarball
+- Add clean, build and install sections
+- Fix doc install
+
 * Thu Dec 6 2012 Ivan Marton <martoni@niif.hu>
 - Upstream package update - Making emir-serp more robustful by preventing exit while invalid registrations
 
@@ -66,11 +73,13 @@ This package contains the EMI Registry - Service Endpoint Record Publisher.
 - Initial RPM package
 
 %prep
-rm -rf %{name}-%{version}
-git clone https://github.com/eu-emi/emir-serp.git %{buildroot}/emir-serp/
-cd %{buildroot}/emir-serp/
-git checkout v1.2.2
-cd -
+%setup -q
+
+%build
+exit 0
+
+%install
+rm -rf $RPM_BUILD_ROOT
 install -d %{buildroot}%{_libdir}/emi/emir-serp/
 install -d %{buildroot}%{_sysconfdir}/emi/emir-serp/
 install -d %{buildroot}%{_bindir}
@@ -79,16 +88,15 @@ install -d %{buildroot}%{_defaultdocdir}/%{name}-%{version}
 install -d %{buildroot}/var/log/emi/emir-serp
 install -d %{buildroot}/etc/init.d
 install -d %{buildroot}/etc/logrotate.d
-install -m 0644 %{buildroot}/emir-serp/daemon.py %{buildroot}%{_libdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emir-serp/EMIR.py %{buildroot}%{_libdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emir-serp/emir-serp.ini %{buildroot}%{_sysconfdir}/emi/emir-serp/
-install -m 0644 %{buildroot}/emir-serp/docs/README %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0644 %{buildroot}/emir-serp/docs/example.json %{buildroot}%{_defaultdocdir}/%{name}-%{version}/
-install -m 0755 %{buildroot}/emir-serp/emir-serp %{buildroot}%{_bindir}/
-install -m 0755 %{buildroot}/emir-serp/packaging/RedHat/initscript/emir-serp %{buildroot}/etc/init.d/
-install -m 0644 %{buildroot}/emir-serp/packaging/RedHat/logrotate/emir-serp %{buildroot}/etc/logrotate.d/
-rm -rf %{buildroot}/emir-serp
+install -m 0644 daemon.py %{buildroot}%{_libdir}/emi/emir-serp/
+install -m 0644 EMIR.py %{buildroot}%{_libdir}/emi/emir-serp/
+install -m 0644 emir-serp.ini %{buildroot}%{_sysconfdir}/emi/emir-serp/
+install -m 0755 emir-serp %{buildroot}%{_bindir}/
+install -m 0755 packaging/RedHat/initscript/emir-serp %{buildroot}/etc/init.d/
+install -m 0644 packaging/RedHat/logrotate/emir-serp %{buildroot}/etc/logrotate.d/
 
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(755, emi, emi, -)
@@ -105,12 +113,11 @@ rm -rf %{buildroot}/emir-serp
 # Lib files
 #
 %attr(755 root root) %dir "%{_libdir}/emi/emir-serp"
-%attr(644 root root) "%{_libdir}/emi/emir-serp/*.py"
+%attr(644 root root) "%{_libdir}/emi/emir-serp/*.py*"
 #
 # Documentation
 #
-%doc %{_defaultdocdir}/%{name}-%{version}/README
-%doc %{_defaultdocdir}/%{name}-%{version}/example.json
+%doc docs/README docs/example.json
 #
 # Executable
 #
