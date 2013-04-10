@@ -12,7 +12,7 @@ clean:
 install:
 	dh_testdir
 	dh_testroot
-	dh_prep  
+	[ -x /usr/bin/dh_prep ] && dh_prep || dh_clean -k
 
 # Build architecture-independent files here.
 binary-indep: install
@@ -34,7 +34,7 @@ binary-indep: install
 #	dh_installinfo
 #	dh_installwm
 #	dh_installudev
-	dh_lintian
+	[ -x /usr/bin/dh_lintian ] && dh_lintian -a || :
 #	dh_undocumented
 #	dh_installman
 #	dh_link
