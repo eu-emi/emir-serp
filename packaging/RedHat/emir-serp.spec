@@ -3,7 +3,7 @@
 #
 Summary:	EMIR-SERP - EMI Registry - Service Endpoint Record Publisher
 Name:		emir-serp
-Version:	1.2.2
+Version:	1.2.3
 Release:	1%{?dist}
 License:	CC-BY-SA
 Group:		System Environment/Daemons
@@ -27,6 +27,13 @@ tools.
 This package contains the EMI Registry - Service Endpoint Record Publisher.
 
 %changelog
+* Thu Jul 4 2013 Ivan Marton <martoni@niif.hu>
+- Make default config file more confortable and informative
+- Extend registration log messages with proof urls
+- Allow 'cert', 'key', and 'cadir' attributes to be defined in 'common' section for common grid compatibility
+- Slight code cleanup. For example removing forgotten test file handling from code.
+- Make logfile optional for logrotate
+
 * Wed Apr 10 2013 Anders Waananen <waananen> - 1.2.2-1
 - Bump release field
 - Reformat spec header with tabs
