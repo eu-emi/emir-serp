@@ -1,4 +1,5 @@
 /var/log/emi/emir-serp/emir-serp.log {
+	missingok
 	rotate 5
 	weekly
 	postrotate
